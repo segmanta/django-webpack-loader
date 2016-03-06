@@ -49,6 +49,17 @@ def webpack_static(asset_name, config='DEFAULT'):
         asset_name
     )
 
+@register.simple_tag
+def segmanta_webpack_static(bundle_name, extension=None, config='DEFAULT'):
+    bundle = _get_bundle(bundle_name, extension, config)
+    for chunk in bundle:
+        url = chunk.get('publicPath') or chunk['url']
+        if chunk['name'].endswith('.js'):
+            return mark_safe(url)
+        elif chunk['name'].endswith('.css'):
+            return mark_safe(url)
+
+    raise Exception("No such webpack static")
 
 @register.assignment_tag
 def get_files(bundle_name, extension=None, config='DEFAULT'):
